@@ -25,7 +25,7 @@ export default async function handler(req, res) {
     const { pdf_base64, prompt } = req.body;
 
     if (!pdf_base64 || !prompt) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Faltan campos requeridos',
         received: Object.keys(req.body || {})
       });
@@ -43,7 +43,7 @@ export default async function handler(req, res) {
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: 'claude-opus-4-5',
+        model: 'claude-sonnet-4-6',
         max_tokens: 4000,
         messages: [{
           role: 'user',
