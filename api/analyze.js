@@ -1,12 +1,15 @@
-export const config = { api: { bodyParser: { sizeLimit: '20mb' } } };
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '50mb'
+    }
+  }
+};
 
 export default async function handler(req, res) {
-  // Allow requests from deudaclara.mx and any origin for now
-  const origin = req.headers.origin;
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Max-Age', '86400');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -21,15 +24,33 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { pdf_base64, prompt } = req.body;
+    // Log what we receive for debugging
+    console.log('Body keys:', Object.keys(req.body || {}));
+    console.log('Body type:', typeof req.body);
 
-    if (!pdf_base64 || !prompt) {
-      return res.status(400).json({ error: 'Faltan campos: pdf_base64 o prompt' });
+    const body = req.body;
+
+    if (!body) {
+      return res.status(400).json({ error: 'No body received' });
+    }
+
+    const pdf_base64 = body.pdf_base64;
+    const prompt = body.prompt;
+
+    if (!pdf_base64) {
+      return res.status(400).json({ error: 'Missing pdf_base64', received_keys: Object.keys(body) });
+    }
+
+    if (!prompt) {
+      return res.status(400).json({ error: 'Missing prompt', received_keys: Object.keys(body) });
     }
 
     if (!process.env.ANTHROPIC_API_KEY) {
-      return res.status(500).json({ error: 'API key no configurada' });
+      return res.status(500).json({ error: 'ANTHROPIC_API_KEY no configurada en Vercel' });
     }
+
+    console.log('pdf_base64 length:', pdf_base64.length);
+    console.log('Calling Anthropic API...');
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -62,14 +83,17 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
+    console.log('Anthropic response status:', response.status);
 
     if (!response.ok) {
+      console.log('Anthropic error:', JSON.stringify(data));
       return res.status(response.status).json({ error: data });
     }
 
     return res.status(200).json(data);
 
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    console.log('Server error:', err.message);
+    return res.status(500).json({ error: err.message, stack: err.stack });
   }
 }
