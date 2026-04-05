@@ -1,0 +1,2987 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeudaClara — Entiende tu Buró en minutos</title>
+<style>
+/* Syne — embedded fallback stack */
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+</style>
+<style>
+/* Fallback if Google Fonts fails */
+:root {
+  --font-display: 'Syne', 'Trebuchet MS', 'Arial Black', sans-serif;
+  --font-body: 'DM Sans', 'Segoe UI', Arial, sans-serif;
+}
+</style>
+<style>
+  :root {
+    --bg: #F0F4F8;
+    --surface: #FFFFFF;
+    --surface2: #EBF2FA;
+    --border: #C9DDF0;
+    --accent: #1A56A0;
+    --accent2: #2E86DE;
+    --green: #1A8754;
+    --yellow: #D97706;
+    --red: #DC2626;
+    --text: #0F2744;
+    --muted: #5A7A9F;
+    --card-glow: 0 4px 24px rgba(26,86,160,0.10);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', 'Segoe UI', Arial, sans-serif;
+    background: #F0F4F8;
+    color: #0F2744;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* NOISE TEXTURE */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    display: none;
+  }
+
+  /* HEADER */
+  header {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    border-bottom: 1px solid #C9DDF0;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(12px);
+  }
+
+  .logo {
+    font-family: 'Syne', 'Trebuchet MS', 'Arial Black', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    background: linear-gradient(135deg, #1A56A0, #2E86DE);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .logo span { color: var(--text); -webkit-text-fill-color: var(--text); }
+
+  .badge-free {
+    background: rgba(26,86,160,0.12);
+    border: 1px solid rgba(26,86,160,0.3);
+    color: #1A56A0;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 60px 20px 40px;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(26,86,160,0.08);
+    border: 1px solid rgba(26,86,160,0.25);
+    border-radius: 30px;
+    padding: 6px 16px;
+    font-size: 12px;
+    color: #5B9BD5;
+    margin-bottom: 24px;
+    letter-spacing: 0.5px;
+  }
+
+  .hero h1 {
+    font-family: 'Syne', 'Trebuchet MS', 'Arial Black', sans-serif;
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .hero h1 .grad {
+    background: linear-gradient(135deg, #1A56A0, #2E86DE);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    color: var(--muted);
+    font-size: 17px;
+    max-width: 500px;
+    margin: 0 auto 36px;
+    line-height: 1.6;
+  }
+
+  /* STEPS */
+  .steps {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .step-num {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: #1A56A0;
+  }
+
+  .step-arrow { color: var(--border); font-size: 16px; }
+
+  /* MAIN CARD */
+  .main-card {
+    position: relative;
+    z-index: 1;
+    max-width: 780px;
+    margin: 0 auto 60px;
+    padding: 0 20px;
+  }
+
+  .card {
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(26,86,160,0.10);
+  }
+
+  /* UPLOAD ZONE */
+  #uploadZone {
+    padding: 48px 40px;
+  }
+
+  .upload-area {
+    border: 2px dashed var(--border);
+    border-radius: 16px;
+    padding: 48px 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: var(--surface2);
+    position: relative;
+  }
+
+  .upload-area:hover, .upload-area.dragover {
+    border-color: #1A56A0;
+    background: rgba(26,86,160,0.04);
+  }
+
+  .upload-icon {
+    width: 64px; height: 64px;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, rgba(26,86,160,0.15), rgba(46,134,222,0.15));
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+  }
+
+  .upload-area h3 {
+    font-family: 'Syne', 'Trebuchet MS', 'Arial Black', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .upload-area p {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .btn-upload {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, var(--accent), #144884);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'DM Sans', 'Segoe UI', Arial, sans-serif;
+  }
+
+  .btn-upload:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(26,86,160,0.35);
+  }
+
+  #fileInput { display: none; }
+
+  .file-selected {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.3);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-top: 16px;
+  }
+
+  .file-selected.show { display: flex; }
+
+  .file-icon { font-size: 24px; }
+  .file-name { font-size: 14px; font-weight: 500; flex: 1; }
+  .file-size { font-size: 12px; color: var(--muted); }
+
+  /* FREE VS PRO */
+  .plan-toggle {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .plan-card {
+    flex: 1;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    cursor: pointer;
+    transition: all 0.25s;
+    background: var(--surface2);
+  }
+
+  .plan-card.selected {
+    border-color: #1A56A0;
+    background: rgba(26,86,160,0.06);
+  }
+
+  .plan-card:hover { border-color: #1A56A0; }
+
+  .plan-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .plan-name {
+    font-family: 'Syne', 'Trebuchet MS', 'Arial Black', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+  }
+
+  .plan-price {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .plan-price strong {
+    color: var(--text);
+    font-size: 16px;
+  }
+
+  .plan-badge {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .plan-badge.free { background: rgba(34,197,94,0.15); color: var(--green); }
+  .plan-badge.pro { background: linear-gradient(135deg, #1A56A0, #2E86DE); color: white; }
+
+  .plan-features { list-style: none; }
+  .plan-features li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--muted);
+    padding: 3px 0;
+  }
+
+  .plan-features li .check { color: var(--green); font-size: 12px; }
+  .plan-features li .lock { color: var(--muted); font-size: 12px; }
+
+  .plan-radio {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+
+  .plan-card.selected .plan-radio {
+    border-color: #1A56A0;
+    background: var(--accent);
+  }
+
+  .plan-card.selected .plan-radio::after {
+    content: '';
+    width: 6px; height: 6px;
+    background: white;
+    border-radius: 50%;
+  }
+
+  /* ANALYZE BUTTON */
+  .btn-analyze {
+    width: 100%;
+    margin-top: 24px;
+    padding: 16px;
+    background: linear-gradient(135deg, #1A56A0, #2E86DE);
+    border: none;
+    border-radius: 14px;
+    color: white;
+    font-family: 'Syne', 'Trebuchet MS', 'Arial Black', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .btn-analyze:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(26,86,160,0.4);
+  }
+
+  .btn-analyze:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* LOADING */
+  #loadingZone {
+    display: none;
+    padding: 60px 40px;
+    text-align: center;
+  }
+
+  .loader-ring {
+    width: 64px; height: 64px;
+    margin: 0 auto 24px;
+    border: 3px solid #C9DDF0;
+    border-top-color: #1A56A0;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-steps {
+    list-style: none;
+    text-align: left;
+    max-width: 320px;
+    margin: 24px auto 0;
+  }
+
+  .loading-steps li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    font-size: 14px;
+    color: var(--muted);
+    transition: color 0.3s;
+  }
+
+  .loading-steps li.active { color: var(--text); }
+  .loading-steps li.done { color: var(--green); }
+
+  .step-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    flex-shrink: 0;
+    transition: background 0.3s;
+  }
+
+  .loading-steps li.active .step-dot { background: var(--accent); animation: pulse 1s infinite; }
+  .loading-steps li.done .step-dot { background: var(--green); }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.4); }
+  }
+
+  /* RESULTS */
+  #resultsZone {
+    display: none;
+    padding: 0;
+  }
+
+  .results-header {
+    padding: 28px 36px;
+    background: linear-gradient(135deg, rgba(26,86,160,0.09), rgba(252,92,125,0.08));
+    border-bottom: 1px solid #C9DDF0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: gap;
+    gap: 16px;
+  }
+
+  .results-title {
+    font-family: 'Syne', 'Trebuchet MS', 'Arial Black', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+  }
+
+  .score-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 18px;
+  }
+
+  .score-label { font-size: 12px; color: var(--muted); }
+  .score-value { font-family: 'Syne', 'Trebuchet MS', 'Arial Black', sans-serif; font-size: 22px; font-weight: 800; }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid #C9DDF0;
+    overflow-x: auto;
+  }
+
+  .tab {
+    padding: 14px 22px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-family: 'DM Sans', 'Segoe UI', Arial, sans-serif;
+  }
+
+  .tab.active {
+    color: var(--text);
+    border-bottom-color: #1A56A0;
+  }
+
+  .tab:hover { color: #0F2744; }
+
+  .tab-content {
+    display: none;
+    padding: 28px 32px;
+  }
+
+  .tab-content.active { display: block; }
+
+  /* RADIOGRAFÍA — SEMÁFORO SALUD */
+  .semaforo-banner {
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border: 1px solid;
+  }
+  .semaforo-banner.rojo   { background: rgba(239,68,68,0.08);   border-color: rgba(239,68,68,0.25); }
+  .semaforo-banner.amarillo{ background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.25); }
+  .semaforo-banner.verde  { background: rgba(34,197,94,0.08);   border-color: rgba(34,197,94,0.25); }
+
+  .semaforo-icon {
+    font-size: 38px;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .semaforo-body { flex: 1; }
+
+  .semaforo-titulo {
+    font-family: 'Syne', 'Trebuchet MS', 'Arial Black', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+  .semaforo-banner.rojo    .semaforo-titulo { color: #DC2626; }
+  .semaforo-banner.amarillo .semaforo-titulo { color: #B45309; }
+  .semaforo-banner.verde   .semaforo-titulo { color: #15803D; }
+
+  .semaforo-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* BARRA PROGRESO ATRASADO vs TOTAL */
+  .progress-section {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+  }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .progress-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .progress-pct {
+    font-family: 'Syne', 'Trebuchet MS', 'Arial Black', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--red);
+  }
+
+  .progress-track {
+    height: 12px;
+    background: var(--surface);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    position: relative;
+  }
+
+  .progress-fill-atrasado {
+    height: 100%;
+    background: linear-gradient(90deg, var(--red), #f97316);
+    border-radius: 8px;
+    transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .progress-fill-corriente {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green), #16a34a);
+    border-radius: 8px;
+    transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+    margin-top: -12px;
+  }
+
+  .progress-legend {
+    display: flex;
+    gap: 20px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .legend-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+
+  /* DEUDA CARDS — nueva versión expandida */
+  .deuda-grid { display: grid; gap: 10px; }
+
+  .deuda-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .deuda-card:hover {
+    border-color: #1A56A0;
+    box-shadow: 0 0 20px rgba(26,86,160,0.06);
+  }
+
+  .deuda-card-top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px 12px;
+  }
+
+  .deuda-icon-wrap {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .icon-atrasado  { background: rgba(239,68,68,0.12); }
+  .icon-corriente { background: rgba(34,197,94,0.12); }
+  .icon-liquidado { background: rgba(34,197,94,0.15); }
+
+  .deuda-main { flex: 1; min-width: 0; }
+  .deuda-name { font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .deuda-tipo { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  .deuda-right { text-align: right; flex-shrink: 0; }
+
+  .deuda-amount {
+    font-family: 'Syne', 'Trebuchet MS', 'Arial Black', sans-serif;
+    font-weight: 800;
+    font-size: 17px;
+  }
+
+  .deuda-pct {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .status-pill {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 20px;
+    letter-spacing: 0.4px;
+    margin-top: 4px;
+  }
+
+  .status-atrasado  { background: rgba(239,68,68,0.15);  color: #DC2626; }
+  .status-alcorriente { background: rgba(34,197,94,0.15); color: #15803D; }
+  .status-corriente { background: rgba(34,197,94,0.15);  color: #15803D; }
+  .status-quita     { background: rgba(245,158,11,0.15); color: #B45309; }
+  .status-liquidado { background: rgba(34,197,94,0.2);   color: var(--green); }
+
+  /* DEUDA DETAIL BAR — barra de deuda por tarjeta */
+  .deuda-bar-wrap {
+    margin: 0 18px;
+    height: 6px;
+    background: var(--surface);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .deuda-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 1s ease;
+  }
+
+  .bar-red    { background: linear-gradient(90deg, #DC2626, #EA580C); }
+  .bar-green  { background: linear-gradient(90deg, #1A8754, #15803D); }
+
+  /* DEUDA META INFO */
+  .deuda-meta {
+    display: flex;
+    gap: 0;
+    border-top: 1px solid var(--border);
+    margin-top: 12px;
+  }
+
+  .deuda-meta-item {
+    flex: 1;
+    padding: 10px 14px;
+    border-right: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .deuda-meta-item:last-child { border-right: none; }
+
+  .meta-label {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 3px;
+  }
+
+  .meta-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .meta-value.highlight { color: #1A56A0; }
+  .meta-value.warn      { color: var(--yellow); }
+  .meta-value.danger    { color: var(--red); }
+
+  /* SECTOR BADGE */
+  .sector-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+  }
+  .sector-bancario    { background: rgba(26,86,160,0.12); color: #1A56A0; }
+  .sector-nobancario  { background: rgba(168,85,247,0.15); color: #93C5FD; }
+
+  /* ESTADO BADGE */
+  .estado-activa   { background: rgba(34,197,94,0.12);  color: #15803D; font-size:10px; font-weight:600; padding:2px 8px; border-radius:20px; }
+  .estado-inactiva { background: rgba(107,107,133,0.15); color: var(--muted); font-size:10px; font-weight:600; padding:2px 8px; border-radius:20px; }
+
+  /* ALERTA CARD */
+  .deuda-alerta {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    background: rgba(245,158,11,0.07);
+    border-top: 1px solid rgba(245,158,11,0.2);
+    padding: 10px 16px;
+    font-size: 12px;
+    color: #B45309;
+    line-height: 1.5;
+  }
+
+  /* SECTOR DIVIDER */
+  .sector-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 18px 0 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  .sector-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* CODIGO FORMA PAGO */
+  .codigo-pill {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 6px;
+    font-weight: 600;
+    background: rgba(239,68,68,0.12);
+    color: #DC2626;
+  }
+  .codigo-pill.ok { background: rgba(34,197,94,0.12); color: #15803D; }
+
+
+  /* GRAD TEXT */
+  .grad-text {
+    background: linear-gradient(135deg, #1A56A0, #2E86DE);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* PROMISE LIST */
+  .intro-promise-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 480px;
+    margin: 0 auto 8px;
+    text-align: left;
+  }
+
+  .promise-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 14px;
+    color: var(--muted);
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.4s, transform 0.4s, border-color 0.3s;
+  }
+
+  .promise-item.visible {
+    opacity: 1;
+    transform: translateX(0);
+    border-color: rgba(26,86,160,0.3);
+    color: var(--text);
+  }
+
+  .promise-check {
+    color: var(--green);
+    font-size: 16px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* DIFF GRID */
+  .intro-diff-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    max-width: 520px;
+    margin: 0 auto;
+    opacity: 0;
+    animation: fadeIn 0.5s 0.4s forwards;
+  }
+
+  .diff-card {
+    border-radius: 14px;
+    padding: 16px;
+    text-align: left;
+  }
+
+  .diff-card.bad  {
+    background: rgba(220,38,38,0.05);
+    border: 1px solid rgba(239,68,68,0.2);
+  }
+
+  .diff-card.good {
+    background: rgba(26,135,84,0.06);
+    border: 1px solid rgba(34,197,94,0.25);
+  }
+
+  .diff-label {
+    font-family: 'Syne', 'Trebuchet MS', 'Arial Black', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: 0.3px;
+  }
+
+  .diff-card.bad  .diff-label { color: #DC2626; }
+  .diff-card.good .diff-label { color: #15803D; }
+
+  .diff-item {
+    font-size: 12px;
+    color: var(--muted);
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    line-height: 1.4;
+  }
+
+  .diff-item:last-child { border-bottom: none; }
+  .diff-card.bad  .diff-item { color: #DC2626; opacity: 0.7; }
+  .diff-card.good .diff-item { color: #15803D; opacity: 0.85; }
+
+  /* SUMMARY STATS */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+
+  .stat-value {
+    font-family: 'Syne', 'Trebuchet MS', 'Arial Black', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+  }
+
+  .stat-value.red { color: var(--red); }
+  .stat-value.yellow { color: var(--yellow); }
+  .stat-value.green { color: var(--green); }
+  .stat-value.purple { color: #1A56A0; }
+
+  /* PLAN DE QUITA */
+  .quita-timeline {
+    display: grid;
+    gap: 10px;
+  }
+
+  .quita-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+
+  .quita-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .quita-bank { font-weight: 600; font-size: 14px; }
+  .quita-priority {
+    font-size: 11px;
+    background: rgba(26,86,160,0.12);
+    color: #1A56A0;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+
+  .quita-bar-wrap {
+    background: var(--surface);
+    border-radius: 6px;
+    height: 8px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+
+  .quita-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #1A56A0, #2E86DE);
+    border-radius: 6px;
+    transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .quita-numbers {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .quita-numbers strong { color: var(--text); }
+
+  /* SIMULADOR */
+  .sim-card {
+    background: linear-gradient(135deg, rgba(26,86,160,0.08), rgba(252,92,125,0.07));
+    border: 1px solid rgba(26,86,160,0.2);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .sim-title {
+    font-family: 'Syne', 'Trebuchet MS', 'Arial Black', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .sim-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .sim-field label {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  .sim-field input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'Syne', 'Trebuchet MS', 'Arial Black', sans-serif;
+    transition: border-color 0.2s;
+  }
+
+  .sim-field input:focus { outline: none; border-color: #1A56A0; }
+
+  .sim-result {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .sim-result-label { font-size: 13px; color: var(--muted); }
+  .sim-result-value {
+    font-family: 'Syne', 'Trebuchet MS', 'Arial Black', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: #1A56A0;
+  }
+
+  /* GUÍA NEGOCIACIÓN */
+  .guia-section {
+    margin-bottom: 20px;
+  }
+
+  .guia-section-title {
+    font-family: 'Syne', 'Trebuchet MS', 'Arial Black', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: #1A56A0;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .guia-steps {
+    display: grid;
+    gap: 8px;
+  }
+
+  .guia-step {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 10px 10px 0;
+    padding: 14px 16px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .guia-step strong { color: var(--text); display: block; margin-bottom: 4px; }
+
+  .script-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 13px;
+    color: #5B9BD5;
+    font-style: italic;
+    margin-top: 8px;
+    line-height: 1.6;
+  }
+
+  .warning-box {
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 16px;
+  }
+
+  .warning-title {
+    color: #DC2626;
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+
+  .warning-list { list-style: none; }
+  .warning-list li {
+    font-size: 13px;
+    color: var(--muted);
+    padding: 3px 0;
+    display: flex;
+    gap: 8px;
+  }
+
+  .warning-list li::before { content: '✗'; color: var(--red); }
+
+  /* PRO LOCK */
+  .pro-lock {
+    display: none;
+    text-align: center;
+    padding: 40px 32px;
+    background: var(--surface2);
+    border-radius: 16px;
+    border: 1px dashed var(--border);
+  }
+
+  .lock-icon { font-size: 36px; margin-bottom: 16px; }
+  .lock-title {
+    font-family: 'Syne', 'Trebuchet MS', 'Arial Black', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .lock-desc { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+
+  .btn-pro {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #1A56A0, #2E86DE);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', 'Segoe UI', Arial, sans-serif;
+  }
+
+  /* DOWNLOAD BTN */
+  .actions-bar {
+    padding: 20px 32px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn-action {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'DM Sans', 'Segoe UI', Arial, sans-serif;
+  }
+
+  .btn-secondary {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  .btn-secondary:hover { border-color: #1A56A0; color: #1A56A0; }
+
+  .btn-new {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    margin-left: auto;
+  }
+
+  .btn-new:hover { border-color: var(--red); color: var(--red); }
+
+  /* FOOTER NOTE */
+  .footer-note {
+    text-align: center;
+    font-size: 12px;
+    color: #5A7A9F;
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* MOBILE */
+  @media (max-width: 600px) {
+    header { padding: 16px 20px; }
+    #uploadZone { padding: 28px 20px; }
+    .plan-toggle { flex-direction: column; }
+    .deuda-row { grid-template-columns: 1fr auto; }
+    .quita-chip { display: none; }
+    .sim-grid { grid-template-columns: 1fr; }
+    .tab-content { padding: 20px 16px; }
+    .results-header { padding: 20px; }
+    .actions-bar { padding: 16px 20px; }
+  }
+
+  /* ═══════════════════════════════════
+     INTRO SCREEN — YouTube
+  ═══════════════════════════════════ */
+  #introScreen {
+    position: fixed;
+    inset: 0;
+    background: #F0F4F8;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #ytPlayer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  #ytPlayer iframe {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .intro-skip {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0,0,0,0.65);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.9);
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'DM Sans', 'Segoe UI', Arial, sans-serif;
+    transition: all 0.2s;
+    z-index: 1002;
+    backdrop-filter: blur(8px);
+  }
+
+  .intro-skip:hover {
+    background: rgba(124,92,252,0.8);
+    border-color: #1A56A0;
+    color: white;
+  }
+
+  #introScreen.fade-out {
+    animation: screenFadeOut 0.8s ease forwards;
+  }
+
+  @keyframes screenFadeOut {
+    from { opacity: 1; }
+    to   { opacity: 0; pointer-events: none; }
+  }
+
+  /* ═══════════════════════════════════
+     TUTORIAL — CÓMO DESCARGAR BURÓ
+  ═══════════════════════════════════ */
+  #tutorialZone {
+    padding: 36px 40px;
+  }
+
+  .tutorial-header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .tutorial-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(26,86,160,0.08);
+    border: 1px solid rgba(26,86,160,0.25);
+    border-radius: 30px;
+    padding: 5px 14px;
+    font-size: 11px;
+    color: #5B9BD5;
+    margin-bottom: 14px;
+    letter-spacing: 0.5px;
+  }
+
+  .tutorial-title {
+    font-family: 'Syne', 'Trebuchet MS', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+
+  .tutorial-sub {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* STEPS */
+  .tutorial-steps {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .tutorial-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 18px;
+    transition: border-color 0.2s;
+  }
+
+  .tutorial-step:hover { border-color: #1A56A0; }
+
+  .step-bubble {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1A56A0, #2E86DE);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .step-body { flex: 1; }
+
+  .step-title {
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+
+  .step-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .step-tag {
+    display: inline-block;
+    background: rgba(34,197,94,0.12);
+    color: #15803D;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-top: 6px;
+  }
+
+  .step-tag.yellow {
+    background: rgba(245,158,11,0.12);
+    color: #B45309;
+  }
+
+  .step-tag.purple {
+    background: rgba(26,86,160,0.09);
+    color: #5B9BD5;
+  }
+
+  /* LINK BUTTON */
+  .btn-buro-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+    margin-bottom: 16px;
+    cursor: pointer;
+    font-family: 'DM Sans', 'Segoe UI', Arial, sans-serif;
+  }
+
+  .btn-buro-link:hover {
+    border-color: #1A56A0;
+    color: #1A56A0;
+    background: rgba(26,86,160,0.04);
+  }
+
+  .btn-buro-link .ext-icon {
+    font-size: 12px;
+    opacity: 0.6;
+  }
+
+  /* YA TENGO MI BURO BUTTON */
+  .btn-tengo-buro {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #1A56A0, #2E86DE);
+    border: none;
+    border-radius: 14px;
+    color: white;
+    font-family: 'Syne', 'Trebuchet MS', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .btn-tengo-buro:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(26,86,160,0.4);
+  }
+
+  /* INFO BOX */
+  .info-box {
+    display: flex;
+    gap: 12px;
+    background: rgba(26,135,84,0.06);
+    border: 1px solid rgba(34,197,94,0.2);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: #15803D;
+    line-height: 1.5;
+  }
+
+  .info-box .info-icon { font-size: 18px; flex-shrink: 0; }
+
+  @media (max-width: 600px) {
+    #tutorialZone { padding: 24px 16px; }
+  }
+
+
+  /* ═══════════════════════════════════
+     ASISTENTE GUIADO
+  ═══════════════════════════════════ */
+  #guidedAssistant {
+    display: none;
+    padding: 0;
+  }
+
+  .assistant-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 480px;
+    gap: 0;
+  }
+
+  @media (max-width: 700px) {
+    .assistant-layout { grid-template-columns: 1fr; }
+    .assistant-browser { display: none; }
+  }
+
+  /* LEFT — instructions panel */
+  .assistant-panel {
+    padding: 28px 24px;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .assistant-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .assistant-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    background: linear-gradient(135deg, #1A56A0, #2E86DE);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .assistant-step-counter {
+    font-size: 11px;
+    color: var(--muted);
+    margin-left: auto;
+  }
+
+  /* Progress dots */
+  .assistant-dots {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 20px;
+  }
+
+  .assistant-dot {
+    height: 3px;
+    flex: 1;
+    background: var(--border);
+    border-radius: 2px;
+    transition: background 0.3s;
+  }
+
+  .assistant-dot.done    { background: var(--green); }
+  .assistant-dot.active  { background: var(--accent); }
+
+  /* Instruction card */
+  .instruction-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .instruction-step-num {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1A56A0, #2E86DE);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    color: white;
+    margin-bottom: 14px;
+  }
+
+  .instruction-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  .instruction-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 16px;
+    flex: 1;
+  }
+
+  .instruction-desc strong { color: var(--text); }
+
+  .instruction-tip {
+    background: rgba(26,86,160,0.06);
+    border: 1px solid rgba(26,86,160,0.2);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #5B9BD5;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+
+  /* Nav buttons */
+  .assistant-nav {
+    display: flex;
+    gap: 10px;
+  }
+
+  .btn-nav {
+    flex: 1;
+    padding: 11px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+    border: none;
+  }
+
+  .btn-nav-prev {
+    background: var(--surface2);
+    border: 1px solid var(--border) !important;
+    color: var(--muted);
+  }
+
+  .btn-nav-prev:hover { color: var(--text); border-color: #1A56A0 !important; }
+
+  .btn-nav-next {
+    background: linear-gradient(135deg, #1A56A0, #2E86DE);
+    color: white;
+  }
+
+  .btn-nav-next:hover {
+    box-shadow: 0 6px 20px rgba(26,86,160,0.35);
+    transform: translateY(-1px);
+  }
+
+  /* RIGHT — browser preview */
+  .assistant-browser {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+  }
+
+  .browser-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--surface2);
+    border-bottom: 1px solid #C9DDF0;
+  }
+
+  .browser-dots-wrap { display: flex; gap: 5px; }
+  .browser-dot-btn {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+  .bd-red    { background: #ef4444; }
+  .bd-yellow { background: #f59e0b; }
+  .bd-green  { background: #22c55e; }
+
+  .browser-url {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 11px;
+    color: var(--muted);
+    font-family: monospace;
+  }
+
+  .browser-open-btn {
+    font-size: 11px;
+    color: #1A56A0;
+    background: none;
+    border: 1px solid rgba(26,86,160,0.3);
+    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    white-space: nowrap;
+  }
+
+  .browser-open-btn:hover { background: rgba(26,86,160,0.08); }
+
+  .browser-screen {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    min-height: 380px;
+  }
+
+  /* Screen mockup frames */
+  .screen-frame {
+    display: none;
+    position: absolute;
+    inset: 0;
+    padding: 20px;
+    animation: fadeSlideIn 0.4s ease;
+  }
+
+  .screen-frame.active { display: flex; flex-direction: column; justify-content: center; align-items: center; }
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateX(10px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  /* Mockup elements */
+  .mock-logo {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1A56A0;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .mock-title {
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+
+  .mock-field {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mock-field.highlighted {
+    border-color: #1A56A0;
+    background: rgba(26,86,160,0.06);
+    color: var(--text);
+  }
+
+  .mock-btn {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(135deg, #1A56A0, #2E86DE);
+    border-radius: 8px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: white;
+    margin-top: 8px;
+  }
+
+  .mock-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    margin-bottom: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    width: 100%;
+  }
+
+  .mock-menu-item.highlighted {
+    border-color: #1A56A0;
+    background: rgba(26,86,160,0.08);
+    color: var(--text);
+  }
+
+  .mock-highlight-ring {
+    position: absolute;
+    border: 2px solid var(--accent);
+    border-radius: 8px;
+    animation: ringPulse 1.5s infinite;
+    pointer-events: none;
+  }
+
+  @keyframes ringPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(26,86,160,0.4); }
+    50%       { box-shadow: 0 0 0 8px rgba(124,92,252,0); }
+  }
+
+  .mock-arrow {
+    font-size: 24px;
+    color: #1A56A0;
+    animation: bounce 1s infinite;
+    margin: 8px 0;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-5px); }
+  }
+
+  .mock-success {
+    text-align: center;
+    padding: 20px;
+  }
+
+  .mock-success-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+  }
+
+  .mock-success-text {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .mock-success-sub {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .highlight-box {
+    background: rgba(245,158,11,0.15);
+    border: 1px solid rgba(245,158,11,0.3);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 11px;
+    color: #B45309;
+    margin-top: 10px;
+    text-align: center;
+    width: 100%;
+  }
+
+</style>
+</head>
+<body>
+
+<div id="introScreen">
+  <button class="intro-skip" onclick="skipIntro()">Saltar video →</button>
+  <div id="ytPlayer"></div>
+</div>
+
+<div id="mainApp" style="display:none">
+<header>
+  <div class="logo">Deuda<span>Clara</span></div>
+  
+</header>
+
+<div class="hero">
+  <div class="hero-eyebrow">✦ Análisis en menos de 2 minutos</div>
+  <h1>Entiende tu Buró.<br><span class="grad">Toma el control.</span></h1>
+  <p>Sube tu reporte de Buró de Crédito y nuestra IA lo analiza, identifica tus deudas y crea tu plan de quita personalizado.</p>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div>Descarga tu Buró</div>
+    <div class="step-arrow">→</div>
+    <div class="step"><div class="step-num">2</div>Súbelo aquí</div>
+    <div class="step-arrow">→</div>
+    <div class="step"><div class="step-num">3</div>Recibe tu análisis</div>
+    <div class="step-arrow">→</div>
+    <div class="step"><div class="step-num">4</div>Actúa con tu plan</div>
+  </div>
+</div>
+
+<div class="main-card">
+  <div class="card">
+
+    <!-- UPLOAD ZONE -->
+    <div id="tutorialZone">
+
+      <!-- HEADER -->
+      <div class="tutorial-header">
+        <div class="tutorial-eyebrow">📋 Paso previo</div>
+        <div class="tutorial-title">¿Cómo descargo mi<br>Reporte de Buró?</div>
+        <div class="tutorial-sub">Es gratis, tarda menos de 5 minutos y solo necesitas tu RFC.<br>Sigue estos pasos:</div>
+      </div>
+
+      <!-- INFO GRATIS -->
+      <div class="info-box">
+        <span class="info-icon">✅</span>
+        <span>El Reporte de Crédito Especial es <strong>100% gratuito</strong> una vez al año directamente en el portal oficial de Buró de Crédito.</span>
+      </div>
+
+      <!-- PASOS -->
+      <div class="tutorial-steps">
+
+        <div class="tutorial-step">
+          <div class="step-bubble">1</div>
+          <div class="step-body">
+            <div class="step-title">Entra al portal oficial de Buró de Crédito</div>
+            <div class="step-desc">Haz clic en el botón de abajo para ir directo a la página oficial. Asegúrate de estar en <strong>burodecredito.com.mx</strong></div>
+            <span class="step-tag">🔒 Sitio oficial y seguro</span>
+          </div>
+        </div>
+
+        <div class="tutorial-step">
+          <div class="step-bubble">2</div>
+          <div class="step-body">
+            <div class="step-title">Ingresa tus datos personales</div>
+            <div class="step-desc">Necesitarás: nombre completo, fecha de nacimiento, RFC con homoclave y dirección tal como aparece en tu estado de cuenta.</div>
+            <span class="step-tag yellow">⚠️ Ten a la mano un estado de cuenta reciente</span>
+          </div>
+        </div>
+
+        <div class="tutorial-step">
+          <div class="step-bubble">3</div>
+          <div class="step-body">
+            <div class="step-title">Selecciona "Reporte de Crédito Especial"</div>
+            <div class="step-desc">En el menú del portal busca la opción <strong>"Reporte de Crédito Especial"</strong>. Esta es la versión gratuita con todo el detalle de tus créditos.</div>
+            <span class="step-tag purple">💡 No confundir con el Score — ese tiene costo</span>
+          </div>
+        </div>
+
+        <div class="tutorial-step">
+          <div class="step-bubble">4</div>
+          <div class="step-body">
+            <div class="step-title">Verifica tu identidad</div>
+            <div class="step-desc">El portal te pedirá confirmar algunos datos de tus créditos actuales para validar tu identidad. Responde con los datos de tu tarjeta o crédito más reciente.</div>
+            <span class="step-tag">🛡️ Proceso 100% seguro</span>
+          </div>
+        </div>
+
+        <div class="tutorial-step">
+          <div class="step-bubble">5</div>
+          <div class="step-body">
+            <div class="step-title">Descarga tu reporte en PDF</div>
+            <div class="step-desc">Una vez generado, descarga el reporte como <strong>archivo PDF</strong> y guárdalo en tu dispositivo. Ese es el archivo que subirás aquí.</div>
+            <span class="step-tag">📄 Formato PDF requerido</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- OPCIONES -->
+      <button class="btn-tengo-buro" onclick="startGuidedAssistant()" style="margin-bottom:12px">
+        🧭 Guíame paso a paso para descargarlo
+      </button>
+
+      <button class="btn-tengo-buro" onclick="showUploadZone()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);box-shadow:none;">
+        ✅ Ya tengo mi reporte — Subir ahora
+      </button>
+
+    </div>
+
+    <!-- GUIDED ASSISTANT -->
+    <div id="guidedAssistant">
+      <div class="assistant-layout">
+
+        <!-- LEFT: Instructions -->
+        <div class="assistant-panel">
+          <div class="assistant-top">
+            <span class="assistant-logo">DeudaClara</span>
+            <span>🧭 Asistente de descarga</span>
+            <span class="assistant-step-counter" id="aStepCounter">Paso 1 de 6</span>
+          </div>
+
+          <!-- Progress dots -->
+          <div class="assistant-dots" id="aDots">
+            <div class="assistant-dot active" id="adot0"></div>
+            <div class="assistant-dot" id="adot1"></div>
+            <div class="assistant-dot" id="adot2"></div>
+            <div class="assistant-dot" id="adot3"></div>
+            <div class="assistant-dot" id="adot4"></div>
+            <div class="assistant-dot" id="adot5"></div>
+          </div>
+
+          <!-- Instruction card (updated by JS) -->
+          <div class="instruction-card">
+            <div class="instruction-step-num" id="aStepNum">1</div>
+            <div class="instruction-title" id="aStepTitle">Abre el portal de Buró de Crédito</div>
+            <div class="instruction-desc" id="aStepDesc">
+              Haz clic en el botón de abajo para abrir el portal oficial en una nueva ventana. 
+              Asegúrate de que la URL diga exactamente: <strong>burodecredito.com.mx</strong>
+            </div>
+            <div class="instruction-tip" id="aStepTip">
+              💡 No cierres esta ventana de DeudaClara — aquí te iremos guiando en cada paso.
+            </div>
+          </div>
+
+          <!-- Nav -->
+          <div class="assistant-nav">
+            <button class="btn-nav btn-nav-prev" id="aBtnPrev" onclick="assistantPrev()" style="display:none">← Anterior</button>
+            <button class="btn-nav btn-nav-next" id="aBtnNext" onclick="assistantNext()">Abrir Buró →</button>
+          </div>
+        </div>
+
+        <!-- RIGHT: Browser mockup -->
+        <div class="assistant-browser">
+          <div class="browser-bar">
+            <div class="browser-dots-wrap">
+              <div class="browser-dot-btn bd-red"></div>
+              <div class="browser-dot-btn bd-yellow"></div>
+              <div class="browser-dot-btn bd-green"></div>
+            </div>
+            <div class="browser-url" id="aBrowserUrl">burodecredito.com.mx</div>
+            <button class="browser-open-btn" onclick="openBuro()">Abrir ↗</button>
+          </div>
+
+          <div class="browser-screen">
+
+            <!-- FRAME 0: Portal home -->
+            <div class="screen-frame active" id="frame0">
+              <div class="mock-logo">🏦 Buró de Crédito — Portal Oficial</div>
+              <div class="mock-title">Consulta tu historial<br>crediticio</div>
+              <div class="mock-menu-item highlighted">
+                📄 Reporte de Crédito Especial
+                <span style="margin-left:auto;font-size:10px;color:#86efac">✓ GRATIS</span>
+              </div>
+              <div class="mock-menu-item">📊 Score de Crédito <span style="margin-left:auto;font-size:10px;color:#fca5a5">$ de pago</span></div>
+              <div class="mock-menu-item">🔔 Alertas de crédito</div>
+              <div class="mock-arrow">👆</div>
+              <div class="highlight-box">Haz clic en "Reporte de Crédito Especial"</div>
+            </div>
+
+            <!-- FRAME 1: Datos personales -->
+            <div class="screen-frame" id="frame1">
+              <div style="width:100%">
+                <div class="mock-title" style="text-align:left;font-size:13px;margin-bottom:14px">📝 Ingresa tus datos personales</div>
+                <div class="mock-field highlighted">👤 Nombre completo (como en tu INE)</div>
+                <div class="mock-field">📅 Fecha de nacimiento</div>
+                <div class="mock-field">🆔 RFC con homoclave</div>
+                <div class="mock-field">🏠 Dirección (como en tu estado de cuenta)</div>
+                <div class="highlight-box">⚠️ Ten a la mano un estado de cuenta reciente</div>
+              </div>
+            </div>
+
+            <!-- FRAME 2: Validación con crédito -->
+            <div class="screen-frame" id="frame2">
+              <div style="width:100%">
+                <div class="mock-title" style="text-align:left;font-size:13px;margin-bottom:14px">🔐 Verifica tu identidad</div>
+                <div class="mock-field highlighted">💳 Número de tarjeta (últimos 4 dígitos)</div>
+                <div class="mock-field">💰 Límite de crédito exacto</div>
+                <div style="margin:10px 0;font-size:11px;color:var(--muted);line-height:1.5">
+                  El portal te pedirá datos de uno de tus créditos activos para confirmar que eres tú.
+                </div>
+                <div class="highlight-box">💡 Usa los datos de tu tarjeta más reciente</div>
+              </div>
+            </div>
+
+            <!-- FRAME 3: Seleccionar tipo -->
+            <div class="screen-frame" id="frame3">
+              <div style="width:100%">
+                <div class="mock-title" style="text-align:left;font-size:13px;margin-bottom:14px">📋 Selecciona el tipo de reporte</div>
+                <div class="mock-menu-item highlighted">
+                  ✅ Reporte de Crédito Especial — Gratis
+                </div>
+                <div class="mock-menu-item">Score Básico — $58 MXN</div>
+                <div class="mock-menu-item">Score Avanzado — $232 MXN</div>
+                <div class="mock-arrow">👆</div>
+                <div class="highlight-box">Elige siempre la opción GRATIS</div>
+              </div>
+            </div>
+
+            <!-- FRAME 4: Descargar PDF -->
+            <div class="screen-frame" id="frame4">
+              <div style="width:100%">
+                <div class="mock-title" style="text-align:left;font-size:13px;margin-bottom:14px">⬇️ Descarga tu reporte</div>
+                <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px;text-align:center">
+                  <div style="font-size:32px;margin-bottom:8px">📄</div>
+                  <div style="font-size:12px;font-weight:600">Reporte_Credito_Especial.pdf</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:4px">Listo para descargar</div>
+                </div>
+                <div class="mock-btn">⬇️ Descargar PDF</div>
+                <div class="highlight-box">Guarda el PDF — lo necesitarás en el siguiente paso</div>
+              </div>
+            </div>
+
+            <!-- FRAME 5: Listo, regresa -->
+            <div class="screen-frame" id="frame5">
+              <div class="mock-success">
+                <div class="mock-success-icon">🎉</div>
+                <div class="mock-success-text">¡Ya tienes tu reporte!</div>
+                <div class="mock-success-sub">Ahora regresa a DeudaClara<br>y súbelo para analizarlo</div>
+                <div style="margin-top:20px;padding:12px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);border-radius:10px;font-size:12px;color:#86efac">
+                  ✅ El PDF ya está guardado en tu dispositivo.<br>Haz clic en "Subir mi reporte" para continuar.
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div id="uploadZone" style="display:none">
+      <div class="upload-area" id="dropZone">
+        <div class="upload-icon">📄</div>
+        <h3>Sube tu Reporte de Buró</h3>
+        <p>Arrastra el PDF aquí o haz clic para seleccionarlo.<br>Tu información es 100% privada y no se almacena.</p>
+        <button class="btn-upload" onclick="document.getElementById('fileInput').click()">
+          📎 Seleccionar PDF
+        </button>
+        <input type="file" id="fileInput" accept=".pdf" />
+      </div>
+
+      <div class="file-selected" id="fileSelected">
+        <span class="file-icon">📋</span>
+        <div style="flex:1">
+          <div class="file-name" id="fileName">reporte_buro.pdf</div>
+          <div class="file-size" id="fileSize">2.4 MB</div>
+        </div>
+        <button onclick="changeFile()" style="background:none;border:1px solid #C9DDF0;color:#5A7A9F;border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif;" onmouseover="this.style.borderColor='#1A56A0';this.style.color='#1A56A0'" onmouseout="this.style.borderColor='#C9DDF0';this.style.color='#5A7A9F'">🔄 Cambiar archivo</button>
+      </div>
+
+      <!-- PLAN SELECTOR -->
+      <div class="plan-toggle">
+        <div class="plan-card selected" id="planFree" onclick="selectPlan('free')">
+          <div class="plan-header">
+            <div>
+              <div class="plan-name">Plan Gratis</div>
+              <div style="margin-top:2px"><span class="plan-badge free">GRATIS</span></div>
+            </div>
+            <div class="plan-radio" id="radioFree"></div>
+          </div>
+          <ul class="plan-features">
+            <li><span class="check">✓</span> Radiografía de deudas</li>
+            <li><span class="check">✓</span> Resumen de saldos totales</li>
+            <li><span class="lock">🔒</span> Plan de quita detallado</li>
+            <li><span class="lock">🔒</span> Simulador de fondo</li>
+            <li><span class="lock">🔒</span> Guía de negociación</li>
+          </ul>
+        </div>
+
+        <div class="plan-card" id="planPro" onclick="selectPlan('pro')">
+          <div class="plan-header">
+            <div>
+              <div class="plan-name">Plan Completo</div>
+              <div style="margin-top:2px"><span class="plan-badge pro">⚡ PRO</span></div>
+            </div>
+            <div class="plan-radio" id="radioPro"></div>
+          </div>
+          <ul class="plan-features">
+            <li><span class="check">✓</span> Todo lo del plan gratis</li>
+            <li><span class="check">✓</span> Plan de quita detallado</li>
+            <li><span class="check">✓</span> Simulador de fondo</li>
+            <li><span class="check">✓</span> Guía de negociación</li>
+            <li><span class="check">✓</span> Descarga en PDF/Excel</li>
+          </ul>
+        </div>
+      </div>
+
+      <button class="btn-analyze" id="btnAnalyze" onclick="startAnalysis()" disabled>
+        🔍 Analizar mi Buró
+      </button>
+    </div>
+
+    <!-- LOADING -->
+    <div id="loadingZone">
+      <div class="loader-ring"></div>
+      <h3 style="font-family:'Syne',sans-serif;font-size:18px;margin-bottom:8px;">Analizando tu reporte...</h3>
+      <p style="color:var(--muted);font-size:14px;">Nuestra IA está leyendo tu información</p>
+      <ul class="loading-steps" id="loadingSteps">
+        <li id="ls1"><div class="step-dot"></div>Leyendo el PDF de Buró</li>
+        <li id="ls2"><div class="step-dot"></div>Identificando acreedores y saldos</li>
+        <li id="ls3"><div class="step-dot"></div>Calculando ofertas de quita</li>
+        <li id="ls4"><div class="step-dot"></div>Generando plan personalizado</li>
+        <li id="ls5"><div class="step-dot"></div>Preparando guía de negociación</li>
+      </ul>
+    </div>
+
+    <!-- RESULTS -->
+    <div id="resultsZone">
+      <div class="results-header">
+        <div>
+          <div class="results-title">📊 Tu Análisis de Deuda</div>
+          <div style="font-size:13px;color:var(--muted);margin-top:4px;" id="resultSubtitle"></div>
+        </div>
+        <div class="score-badge" id="scoreBadge">
+          <div>
+            <div class="score-label">Score Buró</div>
+            <div class="score-value" id="scoreValue" style="color:var(--yellow);">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" onclick="showTab('radiografia')">📊 Radiografía</button>
+        <button class="tab" onclick="showTab('quita')" id="tabQuita">🧮 Plan de Quita</button>
+        <button class="tab" onclick="showTab('simulador')" id="tabSim">💰 Simulador</button>
+        <button class="tab" onclick="showTab('guia')" id="tabGuia">📜 Guía</button>
+      </div>
+
+      <!-- TAB: RADIOGRAFÍA -->
+      <div class="tab-content active" id="tab-radiografia">
+        <div class="stats-grid" id="statsGrid"></div>
+        <div class="deuda-grid" id="deudaGrid"></div>
+      </div>
+
+      <!-- TAB: PLAN DE QUITA -->
+      <div class="tab-content" id="tab-quita">
+        <div id="quitaContent"></div>
+      </div>
+
+      <!-- TAB: SIMULADOR -->
+      <div class="tab-content" id="tab-simulador">
+        <div id="simContent"></div>
+      </div>
+
+      <!-- TAB: GUÍA -->
+      <div class="tab-content" id="tab-guia">
+        <div id="guiaContent"></div>
+      </div>
+
+      <div class="actions-bar">
+        <button class="btn-action btn-secondary" onclick="copyResult()">📋 Copiar resumen</button>
+        <button class="btn-action btn-secondary" id="btnDownload" style="display:none" onclick="alert('Función disponible en Plan Pro')">⬇️ Descargar PDF</button>
+        <button class="btn-action btn-new" onclick="resetApp()">↩ Nuevo análisis</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer-note">
+  🔒 Tu reporte es procesado localmente y no se almacena en ningún servidor. 
+  DeudaClara no es una institución financiera. El análisis es informativo y no constituye asesoría legal.
+</div>
+
+<script>
+
+// ── INTRO — YouTube ─────────────────────────────────
+let ytPlayer = null;
+
+function skipIntro() {
+  if (ytPlayer) { try { ytPlayer.stopVideo(); } catch(e){} }
+  const screen = document.getElementById('introScreen');
+  screen.classList.add('fade-out');
+  setTimeout(() => {
+    screen.style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
+  }, 800);
+}
+
+// Load YouTube IFrame API
+const ytScript = document.createElement('script');
+ytScript.src = 'https://www.youtube.com/iframe_api';
+document.head.appendChild(ytScript);
+
+function onYouTubeIframeAPIReady() {
+  ytPlayer = new YT.Player('ytPlayer', {
+    videoId: 'r9aR3LIzAgM',
+    playerVars: {
+      autoplay: 1,
+      mute: 0,
+      controls: 0,
+      rel: 0,
+      showinfo: 0,
+      modestbranding: 1,
+      playsinline: 1,
+      fs: 0,
+      iv_load_policy: 3,
+    },
+    events: {
+      onReady: function(e) { e.target.playVideo(); },
+      onStateChange: function(e) {
+        // When video ends (state = 0), auto-skip to app
+        if (e.data === YT.PlayerState.ENDED) {
+          skipIntro();
+        }
+      }
+    }
+  });
+}
+
+
+
+
+// ── GUIDED ASSISTANT ───────────────────────────────
+const ASSISTANT_STEPS = [
+  {
+    title: "Abre el portal de Buró de Crédito",
+    desc: `Haz clic en el botón de abajo para abrir el portal oficial en una nueva ventana.
+           Asegúrate que la URL diga exactamente: <strong>burodecredito.com.mx</strong>`,
+    tip: "💡 No cierres esta ventana de DeudaClara — aquí te iremos guiando paso a paso.",
+    btn: "Abrir Buró de Crédito ↗",
+    action: "openBuro",
+    frame: 0,
+    url: "burodecredito.com.mx"
+  },
+  {
+    title: "Ingresa tus datos personales",
+    desc: `En el portal verás un formulario. Llénalo con:
+           <br><br>• <strong>Nombre completo</strong> (igual que en tu INE)<br>
+           • <strong>Fecha de nacimiento</strong><br>
+           • <strong>RFC con homoclave</strong><br>
+           • <strong>Dirección</strong> (como aparece en tu estado de cuenta)`,
+    tip: "⚠️ Ten a la mano un estado de cuenta reciente de cualquier tarjeta o crédito.",
+    btn: "Ya llené mis datos →",
+    frame: 1,
+    url: "burodecredito.com.mx/datos-personales"
+  },
+  {
+    title: "Verifica tu identidad",
+    desc: `El portal te pedirá confirmar datos de uno de tus créditos activos. Usa los datos de tu <strong>tarjeta más reciente</strong>:
+           <br><br>• Número de tarjeta (últimos dígitos)<br>
+           • Límite de crédito exacto<br><br>
+           Esto es solo para confirmar que eres tú — es un proceso seguro.`,
+    tip: "💡 Si no recuerdas el límite exacto, búscalo en tu app del banco o en tu estado de cuenta.",
+    btn: "Identidad verificada →",
+    frame: 2,
+    url: "burodecredito.com.mx/validacion"
+  },
+  {
+    title: "Selecciona el Reporte de Crédito Especial",
+    desc: `Te aparecerán varias opciones. Elige siempre:<br><br>
+           <strong>"Reporte de Crédito Especial"</strong><br><br>
+           Esta es la versión <strong>100% gratuita</strong> que incluye todo el detalle de tus créditos. 
+           No selecciones el Score ni otras opciones de pago.`,
+    tip: "✅ El Reporte de Crédito Especial es gratis una vez al año por ley.",
+    btn: "Seleccioné la opción →",
+    frame: 3,
+    url: "burodecredito.com.mx/tipo-reporte"
+  },
+  {
+    title: "Descarga tu reporte en PDF",
+    desc: `Tu reporte ya está generado. Haz clic en <strong>"Descargar PDF"</strong> y guárdalo en tu dispositivo.<br><br>
+           Recuerda dónde lo guardas — lo necesitarás para subirlo aquí en DeudaClara.`,
+    tip: "📱 En celular: el PDF se guarda en 'Descargas'. En computadora: pregunta dónde guardar.",
+    btn: "Ya descargué mi PDF →",
+    frame: 4,
+    url: "burodecredito.com.mx/descarga"
+  },
+  {
+    title: "¡Listo! Sube tu reporte a DeudaClara",
+    desc: `Ya tienes tu reporte de Buró de Crédito descargado. Ahora solo falta subirlo aquí para que nuestra IA lo analice.<br><br>
+           Haz clic en el botón de abajo para continuar.`,
+    tip: "🔒 Tu reporte es procesado de forma privada. No se almacena en ningún servidor.",
+    btn: "📄 Subir mi reporte ahora",
+    action: "showUploadZone",
+    frame: 5,
+    url: "deudaclara"
+  }
+];
+
+let aStep = 0;
+
+function startGuidedAssistant() {
+  document.getElementById('tutorialZone').style.display = 'none';
+  document.getElementById('guidedAssistant').style.display = 'block';
+  aStep = 0;
+  renderAssistantStep();
+}
+
+function renderAssistantStep() {
+  const s = ASSISTANT_STEPS[aStep];
+  const total = ASSISTANT_STEPS.length;
+
+  document.getElementById('aStepCounter').textContent = `Paso ${aStep + 1} de ${total}`;
+  document.getElementById('aStepNum').textContent = aStep + 1;
+  document.getElementById('aStepTitle').textContent = s.title;
+  document.getElementById('aStepDesc').innerHTML = s.desc;
+  document.getElementById('aStepTip').textContent = s.tip;
+  document.getElementById('aBrowserUrl').textContent = s.url;
+  document.getElementById('aBtnNext').textContent = s.btn;
+
+  // Dots
+  for (let i = 0; i < total; i++) {
+    const dot = document.getElementById('adot' + i);
+    if (!dot) continue;
+    dot.className = 'assistant-dot' + (i < aStep ? ' done' : i === aStep ? ' active' : '');
+  }
+
+  // Frames
+  document.querySelectorAll('.screen-frame').forEach(f => f.classList.remove('active'));
+  const frame = document.getElementById('frame' + s.frame);
+  if (frame) frame.classList.add('active');
+
+  // Prev button
+  document.getElementById('aBtnPrev').style.display = aStep > 0 ? 'block' : 'none';
+
+  // Last step button style
+  const nextBtn = document.getElementById('aBtnNext');
+  if (aStep === total - 1) {
+    nextBtn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
+  } else {
+    nextBtn.style.background = '';
+  }
+}
+
+function assistantNext() {
+  const s = ASSISTANT_STEPS[aStep];
+  if (s.action === 'openBuro') openBuro();
+  if (s.action === 'showUploadZone') { showUploadZone(); return; }
+  if (aStep < ASSISTANT_STEPS.length - 1) {
+    aStep++;
+    renderAssistantStep();
+  }
+}
+
+function assistantPrev() {
+  if (aStep > 0) { aStep--; renderAssistantStep(); }
+}
+
+function openBuro() {
+  window.open('https://www.burodecredito.com.mx', '_blank');
+  // Advance to next step after opening
+  if (aStep === 0) {
+    setTimeout(() => { aStep = 1; renderAssistantStep(); }, 800);
+  }
+}
+
+
+// ── TUTORIAL → UPLOAD ──
+function showUploadZone() {
+  document.getElementById('tutorialZone').style.display = 'none';
+  const uz = document.getElementById('uploadZone');
+  uz.style.display = 'block';
+  uz.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+let selectedPlan = 'free';
+let uploadedFile = null;
+let analysisResult = null;
+
+// ── FILE HANDLING ──
+document.getElementById('fileInput').addEventListener('change', function(e) {
+  if (e.target.files[0]) handleFile(e.target.files[0]);
+});
+
+const dropZone = document.getElementById('dropZone');
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+
+function handleFile(file) {
+  if (!file.name.toLowerCase().endsWith('.pdf')) {
+    alert('Por favor sube un archivo PDF.');
+    document.getElementById('fileInput').value = '';
+    return;
+  }
+  uploadedFile = file;
+  document.getElementById('fileName').textContent = file.name;
+  document.getElementById('fileSize').textContent = (file.size / 1024 / 1024).toFixed(1) + ' MB';
+  document.getElementById('fileSelected').classList.add('show');
+  document.getElementById('btnAnalyze').disabled = false;
+  document.getElementById('fileInput').value = '';
+}
+
+function changeFile() {
+  document.getElementById('fileInput').click();
+}
+
+function selectPlan(plan) {
+  selectedPlan = plan;
+  document.getElementById('planFree').classList.toggle('selected', plan === 'free');
+  document.getElementById('planPro').classList.toggle('selected', plan === 'pro');
+}
+
+// ── ANALYSIS ──
+async function startAnalysis() {
+  if (!uploadedFile) return;
+
+  document.getElementById('uploadZone').style.display = 'none';
+  document.getElementById('loadingZone').style.display = 'block';
+
+  // Animate loading steps
+  const steps = ['ls1','ls2','ls3','ls4','ls5'];
+  let i = 0;
+  const stepInterval = setInterval(() => {
+    if (i > 0) {
+      document.getElementById(steps[i-1]).className = 'done';
+      document.getElementById(steps[i-1]).querySelector('.step-dot').style.background = 'var(--green)';
+    }
+    if (i < steps.length) {
+      document.getElementById(steps[i]).className = 'active';
+      i++;
+    } else {
+      clearInterval(stepInterval);
+    }
+  }, 900);
+
+  try {
+    const base64 = await fileToBase64(uploadedFile);
+    const isPro = selectedPlan === 'pro';
+
+    const prompt = isPro
+      ? `Eres un experto analista financiero especializado en Buró de Crédito mexicano. Analiza este reporte de Buró de Crédito y responde SOLO con un objeto JSON válido, sin texto adicional, sin markdown, sin explicaciones fuera del JSON.
+
+El JSON debe tener exactamente esta estructura:
+{
+  "score": number o null,
+  "nombre": "string",
+  "fecha_reporte": "string",
+  "resumen": {
+    "deuda_total": number,
+    "deuda_atrasada": number,
+    "deuda_corriente": number,
+    "num_creditos": number,
+    "mensualidad_total": number
+  },
+  "deudas": [
+    {
+      "acreedor": "string",
+      "tipo": "string",
+      "saldo_total": number,
+      "saldo_atrasado": number,
+      "al_corriente": number,
+      "tasa_interes": number o null,
+      "mensualidad": number o null,
+      "estatus": "Atrasado" o "Al corriente" o "Liquidado",
+      "meses_atraso": number,
+      "ultimo_pago": "string o null",
+      "sector": "Bancario" o "No bancario",
+      "estado_cuenta": "Activa" o "Inactiva",
+      "codigo_forma_pago": "string",
+      "alerta": "string o null"
+    }
+  ],
+  "plan_quita": [
+    {
+      "acreedor": "string",
+      "saldo_atrasado": number,
+      "oferta_quita_pct": number,
+      "oferta_quita_monto": number,
+      "ahorro": number,
+      "prioridad": number,
+      "razon": "string"
+    }
+  ],
+  "simulador": {
+    "total_quita_estimada": number,
+    "ahorro_total": number,
+    "fondo_recomendado_mensual": number,
+    "meses_para_fondo": number
+  },
+  "guia_personalizada": {
+    "opening_script": "string",
+    "oferta_script": "string",
+    "documentos_clave": ["string"],
+    "tips_especificos": ["string"],
+    "alertas": ["string"]
+  }
+}`
+      : `Eres un experto analista financiero especializado en Buró de Crédito mexicano. Analiza este reporte de Buró de Crédito y responde SOLO con un objeto JSON válido, sin texto adicional, sin markdown.
+
+El JSON debe tener exactamente esta estructura:
+{
+  "score": number o null,
+  "nombre": "string",
+  "fecha_reporte": "string",
+  "resumen": {
+    "deuda_total": number,
+    "deuda_atrasada": number,
+    "deuda_corriente": number,
+    "num_creditos": number,
+    "mensualidad_total": number
+  },
+  "deudas": [
+    {
+      "acreedor": "string",
+      "tipo": "string",
+      "saldo_total": number,
+      "saldo_atrasado": number,
+      "al_corriente": number,
+      "tasa_interes": number o null,
+      "mensualidad": number o null,
+      "estatus": "Atrasado" o "Al corriente" o "Liquidado",
+      "meses_atraso": number,
+      "ultimo_pago": "string o null",
+      "sector": "Bancario" o "No bancario",
+      "estado_cuenta": "Activa" o "Inactiva",
+      "codigo_forma_pago": "string",
+      "alerta": "string o null"
+    }
+  ],
+  "plan_quita": null,
+  "simulador": null,
+  "guia_personalizada": null
+}`;
+
+    const response = await fetch('https://deudaclara-api.vercel.app/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        pdf_base64: base64,
+        prompt: prompt
+      })
+    });
+
+    const data = await response.json();
+    const text = data.content.map(b => b.text || '').join('');
+    const clean = text.replace(/```json|```/g, '').trim();
+    analysisResult = JSON.parse(clean);
+    analysisResult._plan = selectedPlan;
+
+    clearInterval(stepInterval);
+    steps.forEach(s => {
+      document.getElementById(s).className = 'done';
+    });
+
+    setTimeout(() => {
+      document.getElementById('loadingZone').style.display = 'none';
+      document.getElementById('resultsZone').style.display = 'block';
+      renderResults(analysisResult);
+    }, 600);
+
+  } catch(err) {
+    clearInterval(stepInterval);
+    document.getElementById('loadingZone').style.display = 'none';
+    document.getElementById('uploadZone').style.display = 'block';
+    alert('Error al procesar el PDF. Asegúrate de que sea un reporte de Buró de Crédito válido.\n\nDetalle: ' + err.message);
+  }
+}
+
+function fileToBase64(file) {
+  return new Promise((res, rej) => {
+    const reader = new FileReader();
+    reader.onload = () => res(reader.result.split(',')[1]);
+    reader.onerror = rej;
+    reader.readAsDataURL(file);
+  });
+}
+
+// ── RENDER RESULTS ──
+function renderResults(data) {
+  // Header
+  document.getElementById('resultSubtitle').textContent =
+    `${data.nombre || 'Tu análisis'} · ${data.fecha_reporte || 'Reporte actual'}`;
+
+  // Score
+  const score = data.score;
+  const scoreEl = document.getElementById('scoreValue');
+  if (score) {
+    scoreEl.textContent = score;
+    scoreEl.style.color = score >= 650 ? 'var(--green)' : score >= 500 ? 'var(--yellow)' : 'var(--red)';
+  } else {
+    scoreEl.textContent = 'N/D';
+  }
+
+  // Stats + enhanced radiografia
+  const r = data.resumen;
+  const statsGrid = document.getElementById('statsGrid');
+  const pctAtrasado = r.deuda_total > 0 ? Math.round((r.deuda_atrasada / r.deuda_total) * 100) : 0;
+  const pctCorriente = 100 - pctAtrasado;
+
+  // Semáforo salud financiera
+  let semaforoClass, semaforoIcon, semaforoTitulo, semaforoDesc;
+  if (pctAtrasado === 0) {
+    semaforoClass = 'verde'; semaforoIcon = '🟢';
+    semaforoTitulo = 'Salud financiera: Buena';
+    semaforoDesc = 'Todos tus créditos están al corriente. Sigue así para mantener un buen historial.';
+  } else if (pctAtrasado <= 40) {
+    semaforoClass = 'amarillo'; semaforoIcon = '🟡';
+    semaforoTitulo = 'Salud financiera: Atención';
+    semaforoDesc = `El ${pctAtrasado}% de tu deuda está atrasada. Tienes margen para negociar antes de que empeore.`;
+  } else {
+    semaforoClass = 'rojo'; semaforoIcon = '🔴';
+    semaforoTitulo = 'Salud financiera: Crítica';
+    semaforoDesc = `El ${pctAtrasado}% de tu deuda está atrasada. Es momento de actuar con un plan de quita.`;
+  }
+
+  statsGrid.innerHTML = `
+    <!-- SEMÁFORO -->
+    <div class="semaforo-banner ${semaforoClass}" style="grid-column:1/-1">
+      <div class="semaforo-icon">${semaforoIcon}</div>
+      <div class="semaforo-body">
+        <div class="semaforo-titulo">${semaforoTitulo}</div>
+        <div class="semaforo-desc">${semaforoDesc}</div>
+      </div>
+    </div>
+
+    <!-- TARJETAS STATS -->
+    <div class="stat-card">
+      <div class="stat-label">Deuda Total</div>
+      <div class="stat-value red">${fmt(r.deuda_total)}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Monto Atrasado</div>
+      <div class="stat-value yellow">${fmt(r.deuda_atrasada)}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Al Corriente</div>
+      <div class="stat-value green">${fmt(r.deuda_corriente)}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Núm. Créditos</div>
+      <div class="stat-value purple">${r.num_creditos}</div>
+    </div>
+
+    <!-- BARRA DE PROGRESO ATRASADO VS TOTAL -->
+    <div class="progress-section" style="grid-column:1/-1">
+      <div class="progress-header">
+        <span class="progress-label">Deuda atrasada vs deuda total</span>
+        <span class="progress-pct">${pctAtrasado}% atrasado</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill-atrasado" id="barAtrasado" style="width:0%"></div>
+      </div>
+      <div class="progress-legend">
+        <span><span class="legend-dot" style="background:var(--red)"></span>Atrasado ${fmt(r.deuda_atrasada)} (${pctAtrasado}%)</span>
+        <span><span class="legend-dot" style="background:var(--green)"></span>Al corriente ${fmt(r.deuda_corriente)} (${pctCorriente}%)</span>
+      </div>
+    </div>
+  `;
+
+  // Animate bar after render
+  setTimeout(() => {
+    const bar = document.getElementById('barAtrasado');
+    if (bar) bar.style.width = pctAtrasado + '%';
+  }, 100);
+
+  // Deudas — tarjetas expandidas
+  const deudaGrid = document.getElementById('deudaGrid');
+  const totalDeuda = r.deuda_total || 1;
+
+  const tipoEmoji = {
+    'Tarjeta Crédito': '💳', 'tarjeta crédito': '💳', 'tarjeta': '💳',
+    'Préstamo Personal': '🏦', 'préstamo': '🏦', 'personal': '🏦',
+    'Hipoteca': '🏠', 'Auto': '🚗', 'auto': '🚗', 'Nómina': '💼'
+  };
+
+  function getEmoji(tipo) {
+    const t = (tipo || '').toLowerCase();
+    if (t.includes('tarjeta')) return '💳';
+    if (t.includes('hipoteca')) return '🏠';
+    if (t.includes('auto')) return '🚗';
+    if (t.includes('nómina') || t.includes('nomina')) return '💼';
+    return '🏦';
+  }
+
+  // Group deudas by sector
+  const bancarias = data.deudas.filter(d => (d.sector||'').toLowerCase().includes('banc'));
+  const noBancarias = data.deudas.filter(d => !(d.sector||'').toLowerCase().includes('banc'));
+
+  function renderDeudaCard(d, idx) {
+    const pct = Math.round((d.saldo_total / totalDeuda) * 100);
+    const isAtrasado = d.estatus === 'Atrasado';
+    const statusClass = d.estatus.toLowerCase().replace(/\s+/g, '');
+    const barClass = isAtrasado ? 'bar-red' : 'bar-green';
+    const iconClass = isAtrasado ? 'icon-atrasado' : d.estatus === 'Liquidado' ? 'icon-liquidado' : 'icon-corriente';
+    const ultimoPago = d.ultimo_pago || '—';
+    const quitaEst = isAtrasado && d.saldo_atrasado > 0 ? fmt(d.saldo_atrasado * 0.4) : '—';
+    const estadoClass = (d.estado_cuenta||'').toLowerCase() === 'activa' ? 'estado-activa' : 'estado-inactiva';
+    const codigoOk = (d.codigo_forma_pago||'').includes('01') || (d.codigo_forma_pago||'').includes('corriente');
+    const codigoClass = codigoOk ? 'codigo-pill ok' : 'codigo-pill';
+    const codigoShort = (d.codigo_forma_pago||'—').replace('Cuenta con atraso de más de 12 meses','Atraso +12m')
+      .replace('Cuenta con deuda parcial o total sin recuperar','Pérdida total')
+      .replace('Cuenta al corriente','Al corriente')
+      .replace('Cuenta cerrada','Cerrada');
+
+    const mesesInfo = d.meses_atraso > 0
+      ? `<div class="deuda-meta-item">
+           <div class="meta-label">⏰ Meses atraso</div>
+           <div class="meta-value ${d.meses_atraso >= 12 ? 'danger' : 'warn'}">${d.meses_atraso}m</div>
+         </div>`
+      : `<div class="deuda-meta-item">
+           <div class="meta-label">⏰ Atraso</div>
+           <div class="meta-value" style="color:var(--green)">Al día ✓</div>
+         </div>`;
+
+    const alertaHtml = d.alerta
+      ? `<div class="deuda-alerta">⚠️ ${d.alerta}</div>`
+      : '';
+
+    return `
+    <div class="deuda-card">
+      <div class="deuda-card-top">
+        <div class="deuda-icon-wrap ${iconClass}">${getEmoji(d.tipo)}</div>
+        <div class="deuda-main">
+          <div class="deuda-name">${d.acreedor}</div>
+          <div class="deuda-tipo" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:4px">
+            <span>${d.tipo || 'Crédito'}</span>
+            <span class="${estadoClass}">${d.estado_cuenta || '—'}</span>
+          </div>
+          <div style="display:flex;gap:5px;align-items:center;margin-top:5px;flex-wrap:wrap">
+            <span class="status-pill status-${statusClass}">${d.estatus}</span>
+            <span class="${codigoClass}">${codigoShort}</span>
+          </div>
+        </div>
+        <div class="deuda-right">
+          <div class="deuda-amount">${fmt(d.saldo_total)}</div>
+          <div class="deuda-pct">${pct}% del total</div>
+        </div>
+      </div>
+      <div class="deuda-bar-wrap">
+        <div class="deuda-bar-fill ${barClass}" id="dbar${idx}" style="width:0%"></div>
+      </div>
+      <div class="deuda-meta">
+        ${mesesInfo}
+        <div class="deuda-meta-item">
+          <div class="meta-label">📅 Último pago</div>
+          <div class="meta-value">${ultimoPago}</div>
+        </div>
+        <div class="deuda-meta-item">
+          <div class="meta-label">✂️ Quita est.</div>
+          <div class="meta-value highlight">${quitaEst}</div>
+        </div>
+      </div>
+      ${alertaHtml}
+    </div>`;
+  }
+
+  let html = '';
+  if (bancarias.length > 0) {
+    html += `<div class="sector-divider">🏛️ Bancarios (${bancarias.length})</div>`;
+    bancarias.forEach((d, idx) => { html += renderDeudaCard(d, idx); });
+  }
+  if (noBancarias.length > 0) {
+    html += `<div class="sector-divider">🏪 No Bancarios (${noBancarias.length})</div>`;
+    noBancarias.forEach((d, idx) => { html += renderDeudaCard(d, bancarias.length + idx); });
+  }
+  if (bancarias.length === 0 && noBancarias.length === 0) {
+    data.deudas.forEach((d, idx) => { html += renderDeudaCard(d, idx); });
+  }
+  deudaGrid.innerHTML = html;
+
+  // Animate deuda bars
+  setTimeout(() => {
+    data.deudas.forEach((d, idx) => {
+      const bar = document.getElementById('dbar' + idx);
+      if (bar) bar.style.width = Math.round((d.saldo_total / totalDeuda) * 100) + '%';
+    });
+  }, 200);
+
+  // Pro tabs
+  const isPro = data._plan === 'pro';
+
+  // Plan de Quita
+  const quitaContent = document.getElementById('quitaContent');
+  if (isPro && data.plan_quita) {
+    quitaContent.innerHTML = `
+      <div class="stats-grid" style="margin-bottom:20px">
+        <div class="stat-card">
+          <div class="stat-label">Total quita estimada</div>
+          <div class="stat-value purple">${fmt(data.simulador?.total_quita_estimada || 0)}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Ahorro vs saldo actual</div>
+          <div class="stat-value green">${fmt(data.simulador?.ahorro_total || 0)}</div>
+        </div>
+      </div>
+      <div class="quita-timeline">
+        ${data.plan_quita.map(q => `
+          <div class="quita-item">
+            <div class="quita-header">
+              <div class="quita-bank">${q.acreedor}</div>
+              <div class="quita-priority">Prioridad ${q.prioridad}</div>
+            </div>
+            <div class="quita-bar-wrap">
+              <div class="quita-bar" style="width:${q.oferta_quita_pct}%"></div>
+            </div>
+            <div class="quita-numbers">
+              <span>Saldo: <strong>${fmt(q.saldo_atrasado)}</strong></span>
+              <span>Oferta (${q.oferta_quita_pct}%): <strong>${fmt(q.oferta_quita_monto)}</strong></span>
+              <span>Ahorras: <strong style="color:var(--green)">${fmt(q.ahorro)}</strong></span>
+            </div>
+            <div style="font-size:12px;color:var(--muted);margin-top:8px;">💡 ${q.razon}</div>
+          </div>
+        `).join('')}
+      </div>`;
+  } else {
+    quitaContent.innerHTML = lockScreen('Plan de Quita Detallado', 'Ve exactamente cuánto ofrecer a cada banco, en qué orden negociar y cuánto puedes ahorrar.');
+  }
+
+  // Simulador
+  const simContent = document.getElementById('simContent');
+  if (isPro && data.simulador) {
+    const s = data.simulador;
+    simContent.innerHTML = `
+      <div class="sim-card">
+        <div class="sim-title">💰 Simulador: ¿Cuándo tendrás el fondo?</div>
+        <div class="sim-grid">
+          <div class="sim-field">
+            <label>Meta de fondo (quita total)</label>
+            <input type="text" id="simMeta" value="${s.total_quita_estimada}" oninput="calcSim()">
+          </div>
+          <div class="sim-field">
+            <label>Ahorro mensual disponible</label>
+            <input type="text" id="simMensual" value="${s.fondo_recomendado_mensual}" oninput="calcSim()">
+          </div>
+        </div>
+        <div class="sim-result">
+          <div>
+            <div class="sim-result-label">Meses para llegar al fondo</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px" id="simFecha"></div>
+          </div>
+          <div class="sim-result-value" id="simMeses">${s.meses_para_fondo} meses</div>
+        </div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px;font-size:13px;color:var(--muted);line-height:1.7">
+        <strong style="color:var(--text);display:block;margin-bottom:8px">⚠️ Regla de oro:</strong>
+        No contactes a ningún banco hasta tener el <strong style="color:#1A56A0">100% del fondo acumulado</strong>. 
+        Tener el dinero completo te da el máximo poder de negociación.
+      </div>`;
+    calcSim();
+  } else {
+    simContent.innerHTML = lockScreen('Simulador de Fondo', 'Calcula exactamente cuánto tiempo necesitas para juntar el fondo de quita y cuándo podrás negociar.');
+  }
+
+  // Guía
+  const guiaContent = document.getElementById('guiaContent');
+  if (isPro && data.guia_personalizada) {
+    const g = data.guia_personalizada;
+    guiaContent.innerHTML = `
+      <div class="guia-section">
+        <div class="guia-section-title">📞 Guión de llamada personalizado</div>
+        <div class="guia-steps">
+          <div class="guia-step">
+            <strong>Apertura</strong>
+            <div class="script-box">"${g.opening_script}"</div>
+          </div>
+          <div class="guia-step">
+            <strong>Hacer la oferta</strong>
+            <div class="script-box">"${g.oferta_script}"</div>
+          </div>
+        </div>
+      </div>
+      <div class="guia-section">
+        <div class="guia-section-title">📋 Documentos que debes exigir</div>
+        <div class="guia-steps">
+          ${g.documentos_clave.map(d => `<div class="guia-step">✓ ${d}</div>`).join('')}
+        </div>
+      </div>
+      <div class="guia-section">
+        <div class="guia-section-title">💡 Tips específicos para tu caso</div>
+        <div class="guia-steps">
+          ${g.tips_especificos.map(t => `<div class="guia-step">${t}</div>`).join('')}
+        </div>
+      </div>
+      <div class="warning-box">
+        <div class="warning-title">⚠️ Alertas para tu caso</div>
+        <ul class="warning-list">
+          ${g.alertas.map(a => `<li>${a}</li>`).join('')}
+        </ul>
+      </div>`;
+  } else {
+    guiaContent.innerHTML = lockScreen('Guía de Negociación Personalizada', 'Recibe un guión exacto para llamar a cada banco, adaptado a tu situación específica.');
+  }
+
+  if (isPro) {
+    document.getElementById('btnDownload').style.display = 'flex';
+  }
+}
+
+function lockScreen(title, desc) {
+  return `<div class="pro-lock" style="display:block">
+    <div class="lock-icon">🔒</div>
+    <div class="lock-title">${title}</div>
+    <div class="lock-desc">${desc}</div>
+    <button class="btn-pro">⚡ Desbloquear Plan Completo — $149 MXN</button>
+  </div>`;
+}
+
+function calcSim() {
+  const meta = parseFloat(document.getElementById('simMeta')?.value?.replace(/,/g,'')) || 0;
+  const mensual = parseFloat(document.getElementById('simMensual')?.value?.replace(/,/g,'')) || 1;
+  const meses = Math.ceil(meta / mensual);
+  document.getElementById('simMeses').textContent = meses + ' meses';
+  const fecha = new Date();
+  fecha.setMonth(fecha.getMonth() + meses);
+  document.getElementById('simFecha').textContent = 'Estimado: ' + fecha.toLocaleDateString('es-MX', { month: 'long', year: 'numeric' });
+}
+
+function fmt(n) {
+  if (!n && n !== 0) return '$0';
+  return '$' + Math.round(n).toLocaleString('es-MX');
+}
+
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelector(`[onclick="showTab('${name}')"]`).classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+function copyResult() {
+  if (!analysisResult) return;
+  const r = analysisResult.resumen;
+  const text = `ANÁLISIS DEUDA CLARA\n${analysisResult.nombre}\n\nDeuda total: ${fmt(r.deuda_total)}\nMonto atrasado: ${fmt(r.deuda_atrasada)}\nAl corriente: ${fmt(r.deuda_corriente)}\n\nDEUDAS:\n${analysisResult.deudas.map(d => `• ${d.acreedor}: ${fmt(d.saldo_total)} — ${d.estatus}`).join('\n')}`;
+  navigator.clipboard.writeText(text).then(() => alert('✓ Resumen copiado al portapapeles'));
+}
+
+function resetApp() {
+  uploadedFile = null;
+  analysisResult = null;
+  document.getElementById('resultsZone').style.display = 'none';
+  document.getElementById('uploadZone').style.display = 'block';
+  document.getElementById('fileSelected').classList.remove('show');
+  document.getElementById('fileInput').value = '';
+  document.getElementById('btnAnalyze').disabled = true;
+  document.getElementById('btnDownload').style.display = 'none';
+  document.querySelectorAll('.loading-steps li').forEach(li => {
+    li.className = '';
+    li.querySelector('.step-dot').style.background = '';
+  });
+}
+</script>
+</div><!-- /mainApp -->
+</body>
+</html>
